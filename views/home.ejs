@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select a Product Category</title>
+</head>
+<body>
+  <nav>
+    <div class="navlinks">
+      <a href="/home">Heim</a>
+      <a href="/logout">Logg ut</a>
+    </div>
+  </nav>
+  <h1>Select a Product Category</h1>
+  <form action="/products" method="post">
+    <label for="category">Category:</label>
+    <select name="category" id="category">
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Books">Books</option>
+    </select>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

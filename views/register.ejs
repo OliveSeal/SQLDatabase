@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1">
+	<title>Login</title>
+	<!-- the form awesome library is used to add icons to our form -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	<!-- include the stylesheet file -->
+	<link href="/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div class="login">
+		<h1>Register</h1>
+		<form action="/register" method="post" id="registerForm">
+			<div>
+				<input type="text" id="fname" name="fname" placeholder="Fornavn">
+			</div>
+			<div>
+				<input type="text" id="lname" name="lname" placeholder="Etternavn">
+			</div>
+			<div>
+				<input type="text" autocomplete="new-password" name="email" placeholder="E-post" id="email"
+					required>
+			</div>
+			<div>
+				<input type="password" autocomplete="new-password" name="password" placeholder="Password" id="password"
+					required>
+				<input type="password" autocomplete="new-password" name="passwordRepeat" placeholder="Repeat password"
+					id="passwordRepeat" required>
+			</div>
+			<p id="errormessage"></p>
+			<input type="submit" value="Create user">
+		</form>
+	</div>
+</body>
+
+</html>
