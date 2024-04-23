@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+<body>
+    
+    <h2>Admin site</h2>
+    <h3>Users</h3>
+    <table>
+        <tr>
+            <th>Fornavn</th>
+            <th>Etternamn</th>
+            <th>Email</th>
+        </tr>
+        <% users.forEach((user) => { %>
+        <tr>
+            <td><%= user.firstname %> </td>
+            <td><%= user.lastname %> </td>
+            <td><%= user.email %> </td>
+        </tr>
+        <% }) %>
+    </table>
+</body>
+</html>

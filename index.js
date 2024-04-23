@@ -71,6 +71,9 @@ app.post('/auth', async function (req, res) {
 
         if (isPasswordMatched) {
             res.status(200);
+            if (checkInDb.role == 1) {
+                req.session.role = true;
+            }
             // If the account exists
             // Authenticate the user
             req.session.loggedin = true;
@@ -93,7 +96,8 @@ app.get('/home', function (req, res) {
     if (req.session.loggedin) {
         // Output username
         const user = req.session.email;  
-        res.render('home', {user}); 
+        const role = req.session.role;
+        res.render('home', {user, role}); 
     } else {
         // Not logged in
         res.send('Please login to view this page!');
@@ -115,6 +119,26 @@ app.get("/logout", async (req, res) => {
    
     req.session.loggedin = false;
     req.session.username = '';
-
+    req.session.role = false;
     res.redirect("/")
 })
+
+app.get('/role', async function (req, res) {
+    if (req.session.loggedin) {
+        const user = req.session.email;
+        const db = await dbPromise;
+        let getUserDetails = `SELECT * From users WHERE email = '${user}' AND role = 1`;
+        let checkInDb = await db.get(getUserDetails);
+        const query = 'SELECT * FROM users';
+        const users = await db.all(query);
+
+        if (checkInDb === undefined) {
+            res.status(400);
+            res.send("Invalid user")
+        } else {
+            let role = true;
+            res.status(200);
+            res.render('role', {user, role, users});
+        }
+    }
+});

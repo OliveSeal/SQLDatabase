@@ -10,6 +10,9 @@
     <div class="navlinks">
       <a href="/home">Heim</a>
       <a href="/logout">Logg ut</a>
+      <% if (role) { %>
+        <a href="/role">Admin</a>
+      <% } %>
     </div>
   </nav>
   <h1>Select a Product Category</h1>
