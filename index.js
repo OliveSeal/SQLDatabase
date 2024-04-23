@@ -5,7 +5,7 @@ import sqlite3 from 'sqlite3'
 import bcrypt from 'bcrypt'
 
 const dbPromise = open({
-    filename: 'database.db',
+    filename: 'Database.db',
     driver: sqlite3.Database
 });
 
