@@ -142,3 +142,32 @@ app.get('/admin', async function (req, res) {
         }
     }
 });
+
+// Add this route to your existing Node.js script
+app.get('/home', function (req, res) {
+    // If the user is loggedin
+    if (req.session.loggedin) {
+        // Render the create post form
+        res.render('home');
+    } else {
+        // If user is not logged in, redirect to login page
+        res.redirect('/');
+    }
+});
+
+app.post('/home', async function (req, res) {
+    // Ensure user is logged in
+    if (!req.session.loggedin) {
+        // If user is not logged in, redirect to login page
+        return res.redirect('/');
+    }
+
+    const { title, content } = req.body;
+    const db = await dbPromise;
+
+    // Insert the post data into the database
+    await db.run('INSERT INTO posts (title, content) VALUES (?, ?)', [title, content]);
+
+    // Redirect user to the home page or show a success message
+    res.redirect('home.ejs');
+});
