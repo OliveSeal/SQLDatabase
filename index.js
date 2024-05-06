@@ -161,18 +161,41 @@ app.get('/home', function (req, res) {
 app.post('/home', async function (req, res) {
     // Ensure user is logged in
     if (!req.session.loggedin) {
-        // If user is not logged in, redirect to login page
-        return res.redirect('/');
+      // If user is not logged in, redirect to login page
+      return res.redirect('/');
     }
-
+  
     const { title, content } = req.body;
     const db = await dbPromise;
-
+  
     // Insert the post data into the database
     await db.run('INSERT INTO posts (title, content) VALUES (?, ?)', [title, content]);
-
+  
     // Redirect user to the home page or show a success message
-    res.redirect('home.ejs');
+    res.redirect('/home'); // Corrected redirection path
+  });
+  
+  app.get('/home', async function (req, res) {
+    try {
+        // If the user is logged in
+        if (req.session.loggedin) {
+            // Output username
+            const user = req.session.email;
+            const db = await dbPromise;
+            const query = 'SELECT title, content FROM posts';
+            const posts = await db.all(query);
+            
+            // Render the home page template with the posts
+            res.render('home', { posts });
+        } else {
+            // If user is not logged in, redirect to login page or send an error message
+            res.send('Please login to view this page!');
+            // or redirect to login page: res.redirect('/');
+        }
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // GET route for admin edit page

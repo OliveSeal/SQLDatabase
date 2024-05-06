@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
-    <link rel="stylesheet" type="text/css" href="public/styleEdit.css">
-
-    <style>
-        /* Resetting default styles */
+/* Resetting default styles */
 * {
     margin: 0;
     padding: 0;
@@ -86,31 +77,3 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #cc3333;
 }
-
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="navlinks">
-            <a href="/home">Heim</a>
-            <a href="/logout">Logg ut</a>
-            <% if (admin) { %>
-                <a href="/admin">Admin </a>
-                <% } %>
-        </div>
-    </nav>
-    <div class="user-detail">
-
-        <form action="<%='/admin/edit/'+user.email%>" method="post">
-            <label>First Name</label>
-            <input type="text" name="firstname" required value="<%=user.firstname%>">
-            <label>Last name</label>
-            <input type="text" name="lastname" required value="<%=user.lastname%>">
-            <label>Email Address</label>
-            <input type="email" placeholder="Enter Email Address" name="email" required value="<%= user.email%>">
-
-            <button type="submit">Lagre</button>
-        </form>
-    </div>
-</body>
-</html>
