@@ -48,6 +48,8 @@ app.post("/register", async (req, res) => {
     }
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const userId = result.lastID;
+
     await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
     res.redirect("/");
 
