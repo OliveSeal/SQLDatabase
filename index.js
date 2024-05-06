@@ -43,17 +43,25 @@ app.post("/register", async (req, res) => {
     const { fname, lname, email, password, passwordRepeat } = req.body;
 
     if (password != passwordRepeat) {
-        res.render("register", { error: "Password must match." })
+        res.render("register", { error: "Password must match." });
         return;
     }
+    
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const userId = result.lastID;
+    try {
+        await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
+        
+        // Retrieve the auto-generated user ID
+        const userId = db.lastID;
 
-    await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
-    res.redirect("/");
-
-})
+        // Redirect to home page or any other appropriate page
+        res.redirect("/");
+    } catch (error) {
+        console.error("Error registering user:", error);
+        res.status(500).send("Error registering user.");
+    }
+});
 
 app.post('/auth', async function (req, res) {
 

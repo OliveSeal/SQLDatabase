@@ -1,90 +1,80 @@
-/* Resetting default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Body styles */
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  /* Navigation styles */
-  nav {
-    background-color: #007bff;
-    padding: 10px 20px;
-    margin-bottom: 20px;
-  }
-  
-  .navlinks {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .navlinks a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 20px;
-  }
-  
-  /* Header styles */
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Form styles */
-  form {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  select, button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 600px) {
-    nav {
-      padding: 10px;
-    }
-  
-    .navlinks {
-      justify-content: center;
-    }
-  
-    .navlinks a {
-      margin-left: 10px;
-      margin-right: 10px;
-    }
-  
-    form {
-      padding: 10px;
-    }
-  }
+/* styleHome.css */
+
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+}
+
+/* Navigation */
+nav {
+  background-color: #ffcccc;
+  padding: 10px;
+}
+
+.navlinks {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navlinks a {
+  text-decoration: none;
+  color: #333;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.navlinks a:hover {
+  background-color: #e0e0e0;
+}
+
+/* Heading */
+h2 {
+  margin-top: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Form */
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff6666;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #cc3333;
+}

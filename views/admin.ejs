@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="styleAdmin.css">
 </head>
 <body>
-    
+    <nav>
+        <div class="navlinks">
+            <a href="/home">Heim</a>
+            <a href="/logout">Logg ut</a>
+            <% if (admin) { %>
+                <a href="/admin">Admin </a>
+                <% } %>
+        </div>
     <h2>Admin site</h2>
     <h3>Users</h3>
     <table>

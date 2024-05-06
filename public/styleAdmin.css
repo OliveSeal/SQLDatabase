@@ -1,54 +1,99 @@
-/* Resetting default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* styleAdmin.css */
 
-/* Body styles */
+/* Body */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
 }
 
-/* Header styles */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
+/* Navigation */
+nav {
+    background-color: #ffcccc;
+    padding: 10px;
 }
 
-h3 {
+.navlinks {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navlinks a {
+    text-decoration: none;
+    color: #333;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.navlinks a:hover {
+    background-color: #e0e0e0;
+}
+
+/* Heading */
+h2, h3 {
     margin-top: 20px;
-    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
 }
 
-/* Table styles */
+/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
     text-align: left;
 }
 
 table th {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #ff9999;
+    color: #333;
 }
 
-/* Alternate row color */
-table tr:nth-child(even) {
+table td {
+    background-color: #fff;
+}
+
+table tr:nth-child(even) td {
     background-color: #f2f2f2;
 }
 
-/* Responsive styles */
-@media (max-width: 600px) {
-    table th, table td {
-        padding: 6px;
-    }
+/* Links */
+a {
+    text-decoration: none;
+    color: #ff6666;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #cc3333;
+}
+
+/* Buttons */
+button[type="submit"] {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff6666;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #cc3333;
+}
+
+/* Confirmation message */
+.confirmation {
+    margin-top: 10px;
+    text-align: center;
+    color: #ff3333;
 }
