@@ -171,3 +171,72 @@ app.post('/home', async function (req, res) {
     // Redirect user to the home page or show a success message
     res.redirect('home.ejs');
 });
+
+app.get('/admin/edit/:id', async function (req, res) {
+    const admin = req.session.admin; // Henter 'admin'-status fra brukerens session.
+
+    if (admin) { // Sjekker om brukeren er admin.
+        const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
+        const id = req.params.id; // Henter brukerens ID fra URL-parameteren.
+        const query = `SELECT * FROM users WHERE id=${id}`; // SQL-spørring for å hente brukerdata basert på ID.
+        const user = await db.all(query); // Utfører SQL-spørringen og henter brukerdata.
+
+        if (user === undefined) { // Sjekker om brukeren finnes.
+            res.status(400);
+            res.send("Invalid user"); // Sender feilmelding hvis brukeren ikke finnes.
+        } else {
+            res.status(200);
+            res.render('edit', { user: user[0], admin}); // Sender brukerdata til 'edit' visningen.
+        }
+    }
+    else {
+        res.status(400);
+        res.send("Not admin"); // Sender feilmelding hvis brukeren ikke er admin.
+    }
+});
+
+// Rute for å håndtere POST-forespørsler til '/admin/edit/:id'.
+app.post('/admin/edit/:id', async function (req, res) {
+    const admin = req.session.admin; // Henter 'admin'-status fra session.
+    
+    if (admin) { // Sjekker om brukeren er admin.
+        const id = req.params.id; // Henter brukerens ID fra URL-parameteren.
+        const updateData = req.body; // Henter data som skal oppdateres fra forespørselskroppen.
+        const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
+        const fields = Object.keys(updateData).map(field => `${field} = ?`).join(", "); // Bygger delen av SQL-spørringen som spesifiserer feltene som skal oppdateres.
+        const values = Object.values(updateData); // Henter verdiene som skal oppdateres.
+        
+        // Legger til bruker-ID til verdilisten for parameterisering
+        values.push(id);
+        
+        const query = `UPDATE users SET ${fields} WHERE id = ?`; // Bygger den fulle SQL-spørringen for oppdatering.
+
+        try {
+            const result = await db.run(query, values); // Utfører oppdateringen i databasen.
+            console.log(result.changes + " record(s) updated"); // Logger antall rader som er oppdatert.
+            res.redirect('/admin'); // Omdirigerer brukeren tilbake til admin-siden.
+        } catch (error) {
+            console.error('Error when updating:', error); // Logger eventuelle feil under oppdatering.
+        }
+    }
+    else {
+        res.status(400);
+        res.send("Not authorized"); // Sender feilmelding hvis brukeren ikke er admin.
+    }
+});
+
+// Rute for å håndtere POST-forespørsler til '/admin/delete/:id'.
+app.post('/admin/delete/:id', async (req, res) => {
+    const id = req.params.id;  // Henter ID fra URL-parameteren.
+    const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
+    const query = 'DELETE FROM users WHERE id = ?';
+    
+    try {
+        await db.run(query, id); // Utfører sletting av brukeren fra databasen.
+        console.log('Deleted user with ID:', id); // Logger ID-en til brukeren som ble slettet.
+        res.redirect('/admin');  // Omdirigerer tilbake til admin-siden etter sletting.
+    } catch (error) {
+        console.error('Error when deleting:', error); // Logger eventuelle feil under sletting.
+        res.status(500).send("Unable to delete user.");  // Sender feilmelding hvis sletting feiler.
+    }
+});

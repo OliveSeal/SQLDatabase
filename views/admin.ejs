@@ -15,12 +15,20 @@
             <th>Fornavn</th>
             <th>Etternamn</th>
             <th>Email</th>
+            <th>Rediger</th>
+            <th>Slett</th>
         </tr>
         <% users.forEach((user) => { %>
         <tr>
             <td><%= user.firstname %> </td>
             <td><%= user.lastname %> </td>
             <td><%= user.email %> </td>
+            <td><a href="/admin/edit/<%=user.id%>">Edit</a></td>
+            <td>
+                <form action="/admin/delete/<%= user.id %>" method="post" onsubmit="return confirm('Er du sikker på at du vil slette denne brukeren?');">
+                    <button type="submit">Slett</button>
+                </form>
+            </td>
         </tr>
         <% }) %>
     </table>
