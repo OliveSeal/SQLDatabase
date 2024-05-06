@@ -43,25 +43,18 @@ app.post("/register", async (req, res) => {
     const { fname, lname, email, password, passwordRepeat } = req.body;
 
     if (password != passwordRepeat) {
-        res.render("register", { error: "Password must match." });
+        res.render("register", { error: "Password must match." })
         return;
     }
-    
     const passwordHash = await bcrypt.hash(password, 10);
 
-    try {
-        await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
-        
-        // Retrieve the auto-generated user ID
-        const userId = db.lastID;
+    // Inserting user data into the database and getting the last inserted row ID
+    const result = await db.run("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)", fname, lname, email, passwordHash);
+    const userId = result.lastID;
 
-        // Redirect to home page or any other appropriate page
-        res.redirect("/");
-    } catch (error) {
-        console.error("Error registering user:", error);
-        res.status(500).send("Error registering user.");
-    }
-});
+    res.redirect("/");
+})
+
 
 app.post('/auth', async function (req, res) {
 
@@ -182,68 +175,69 @@ app.post('/home', async function (req, res) {
     res.redirect('home.ejs');
 });
 
-app.get('/admin/edit/:id', async function (req, res) {
-    const admin = req.session.admin; // Henter 'admin'-status fra brukerens session.
+// GET route for admin edit page
+app.get('/admin/edit/:email', async function (req, res) {
+    const admin = req.session.admin;
 
-    if (admin) { // Sjekker om brukeren er admin.
-        const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
-        const id = req.params.id; // Henter brukerens ID fra URL-parameteren.
-        const query = `SELECT * FROM users WHERE id=${id}`; // SQL-spørring for å hente brukerdata basert på ID.
-        const user = await db.all(query); // Utfører SQL-spørringen og henter brukerdata.
+    if (admin) {
+        const db = await dbPromise;
+        const email = req.params.email;
+        const query = `SELECT * FROM users WHERE email='${email}'`;
 
-        if (user === undefined) { // Sjekker om brukeren finnes.
-            res.status(400);
-            res.send("Invalid user"); // Sender feilmelding hvis brukeren ikke finnes.
-        } else {
-            res.status(200);
-            res.render('edit', { user: user[0], admin}); // Sender brukerdata til 'edit' visningen.
+        try {
+            console.log("Query:", query); // Log the query to verify its correctness
+            const user = await db.get(query);
+            console.log("User:", user); // Log the user object to see if it's retrieved
+            if (!user) {
+                res.status(400).send("Invalid user");
+            } else {
+                res.status(200).render('edit', { user, admin });
+            }
+        } catch (error) {
+            console.error('Error when retrieving user:', error);
+            res.status(500).send("Internal Server Error");
         }
-    }
-    else {
-        res.status(400);
-        res.send("Not admin"); // Sender feilmelding hvis brukeren ikke er admin.
+    } else {
+        res.status(400).send("Not admin");
     }
 });
 
-// Rute for å håndtere POST-forespørsler til '/admin/edit/:id'.
-app.post('/admin/edit/:id', async function (req, res) {
-    const admin = req.session.admin; // Henter 'admin'-status fra session.
+// POST route to handle edits
+app.post('/admin/edit/:email', async function (req, res) {
+    const admin = req.session.admin;
     
-    if (admin) { // Sjekker om brukeren er admin.
-        const id = req.params.id; // Henter brukerens ID fra URL-parameteren.
-        const updateData = req.body; // Henter data som skal oppdateres fra forespørselskroppen.
-        const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
-        const fields = Object.keys(updateData).map(field => `${field} = ?`).join(", "); // Bygger delen av SQL-spørringen som spesifiserer feltene som skal oppdateres.
-        const values = Object.values(updateData); // Henter verdiene som skal oppdateres.
+    if (admin) {
+        const email = req.params.email;
+        const updateData = req.body;
+        const db = await dbPromise;
+        const fields = Object.keys(updateData).map(field => `${field} = ?`).join(", ");
+        const values = Object.values(updateData);
+        values.push(email);
         
-        // Legger til bruker-ID til verdilisten for parameterisering
-        values.push(id);
-        
-        const query = `UPDATE users SET ${fields} WHERE id = ?`; // Bygger den fulle SQL-spørringen for oppdatering.
+        const query = `UPDATE users SET ${fields} WHERE email = ?`;
 
         try {
-            const result = await db.run(query, values); // Utfører oppdateringen i databasen.
-            console.log(result.changes + " record(s) updated"); // Logger antall rader som er oppdatert.
-            res.redirect('/admin'); // Omdirigerer brukeren tilbake til admin-siden.
+            const result = await db.run(query, values);
+            console.log(result.changes + " record(s) updated");
+            res.redirect('/admin');
         } catch (error) {
-            console.error('Error when updating:', error); // Logger eventuelle feil under oppdatering.
+            console.error('Error when updating:', error);
+            res.status(500).send("Internal Server Error");
         }
-    }
-    else {
-        res.status(400);
-        res.send("Not authorized"); // Sender feilmelding hvis brukeren ikke er admin.
+    } else {
+        res.status(400).send("Not authorized");
     }
 });
 
 // Rute for å håndtere POST-forespørsler til '/admin/delete/:id'.
-app.post('/admin/delete/:id', async (req, res) => {
-    const id = req.params.id;  // Henter ID fra URL-parameteren.
+app.post('/admin/delete/:email', async (req, res) => {
+    const email = req.params.email;  // Henter e-posten fra URL-parameteren.
     const db = await dbPromise; // Venter på at databasetilkoblingen skal være klar.
-    const query = 'DELETE FROM users WHERE id = ?';
+    const query = 'DELETE FROM users WHERE email = ?';
     
     try {
-        await db.run(query, id); // Utfører sletting av brukeren fra databasen.
-        console.log('Deleted user with ID:', id); // Logger ID-en til brukeren som ble slettet.
+        await db.run(query, email); // Utfører sletting av brukeren fra databasen basert på e-post.
+        console.log('Deleted user with email:', email); // Logger e-posten til brukeren som ble slettet.
         res.redirect('/admin');  // Omdirigerer tilbake til admin-siden etter sletting.
     } catch (error) {
         console.error('Error when deleting:', error); // Logger eventuelle feil under sletting.

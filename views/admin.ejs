@@ -30,9 +30,10 @@
             <td><%= user.firstname %> </td>
             <td><%= user.lastname %> </td>
             <td><%= user.email %> </td>
-            <td><a href="/admin/edit/<%=user.id%>">Edit</a></td>
+            <td><a href="/admin/edit/<%=user.email%>">Edit</a></td>
             <td>
-                <form action="/admin/delete/<%= user.id %>" method="post" onsubmit="return confirm('Er du sikker på at du vil slette denne brukeren?');">
+                <!-- Change the form action to use user's email instead of ID -->
+                <form action="/admin/delete/<%= user.email %>" method="post" onsubmit="return confirm('Er du sikker på at du vil slette denne brukeren?');">
                     <button type="submit">Slett</button>
                 </form>
             </td>
